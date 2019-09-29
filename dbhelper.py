@@ -6,6 +6,8 @@ from sqlalchemy import create_engine
 import datetime
 import bleach
 from flask_login import UserMixin
+from flask import jsonify
+
 
 Base = declarative_base()
 
@@ -155,6 +157,11 @@ def edit_comment(id,new_comment):
 	comment.comment = new_comment
 	session.add(comment)
 	session.commit()
+
+def get_user_comments_api(user_id):
+	session = create_session()
+	user_comments = session.query(Comment).filter_by(commentor=user_id).all()
+	return user_comments
 	
 #Below is the implementation using raw sql queries instead of orm
 '''

@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request, redirect, url_for,make_response, session as login_session
+from flask import Flask,render_template, request, redirect, url_for,make_response,jsonify, session as login_session
 import requests
 import jinja2
 import hmac
@@ -409,7 +409,15 @@ def delete_blog_post(id):
 	else:
 		post = get_post(id)
 		return render_template('confirm_delete.html',p_id=id,type='Blog Post',content=post.subject)
-	
+
+
+#returns the json format of the user commetns		
+@app.route('/comments/<string:user_id>',methods=['GET','POST'])
+@flask_login.login_required
+def comments_api_json(user_id):
+	comments = get_user_comments_api(user_id)
+	return jsonify(Comment=[i.serialize for i in comments])
+
 class post_form(Form):
 	subject = StringField("Subject",[validators.Length(min=5, max=150),validators.required()])
 	content = TextAreaField("Content", [validators.required()])
