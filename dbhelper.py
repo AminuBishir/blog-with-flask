@@ -29,6 +29,18 @@ class Comment(Base):
 	#create relationship between this table and blogs table
 	blog = relationship(Blog)
 
+	#creating api endpoint
+	@property
+	def serialize(self):
+		#return the object data in an easily serializable format
+		return {
+		'id':self.id,
+		'p_id':self.p_id,
+		'commentor':self.commentor,
+		'comment':self.comment
+		}
+		
+		
 class User(UserMixin,Base):
 	__tablename__ = 'users'
 	email=Column(String(100),nullable=False,primary_key=True)
