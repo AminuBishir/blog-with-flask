@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+	{% block body %}
+		<center><h1>Sadarwa -Blog</h1> <a href="http://localhost:5000/blog">Home</a></center>
+		
+		<hr>
+		
+			
+				<div><h3 style="font-family:sans-serif,Time New Roman, courier; text-decoration:underline,bold; margin-left:5%; text-align:left">{{posts.subject}}</h3></div>
+				<div class="mx-sm-5"><img src="{{posts.img_src}}" class="img-fluid mx-auto" alt="Img here"/>
+				
+				{% if posts.author == current_user.email and current_user.role=='admin'%}
+				<div class="d-flex">
+					<a href="http://localhost:5000/edit_post/{{posts.p_id}}" class="nav-link ">Edit</a>
+					<a href="http://localhost:5000/delete_post/{{posts.p_id}}" class="nav-link">Delete</a>
+				</div>
+					
+				
+				{% endif %}
+				
+				</div>
+				<p style="text-align:left; text-decoration:bold; margin-left:5%"></p>
+				<div style="margin: 3% 20% 10% 5%; text-align:justify"><font style="font-weight:bold; padding-bottom:20px; font-size12px; font-family:courier;">Published on {{posts.created.date()}} by {{posts.author}} </font> <br>{{posts.content | safe}}</div>
+			
+			
+			{% if login %} 
+					<div class="form-group mx-md-5" style="width:auto">
+						<form method="post" class="form-inline" action="/blog/{{posts.p_id}}">
+						<input class="form-control" name="post_id" value="{{posts.p_id}}" hidden>
+						<input type="text" class="form-control" placeholder="comment..." name="comment" required><button type="submit" class="btn btn-primary">Comment </button>{{ current_user.email}}
+						
+						</form>
+					
+					</div>
+					{% endif %}<!--For comment form-->
+					
+					
+					{% if comments %}
+					<div class="mx-md-5" style="width:auto%; text-align:left;">
+						<ul class="list-group borderless">
+						
+						{% for comment in comments %}
+						
+						<li class="list-group-item" style="margin-bottom:10px">
+						<h5 style="color:blue; font-family:'aria-rounded',aria,'sans-serif';font-size:18px;font-weight:bold">{{comment.commentor}}</h5>
+						<font style="margin-left:5px">{{comment.comment}}</font>
+						{% if comment.commentor == current_user.email or current_user.role=='admin' %}
+						<p class="d-flex">
+							<a href="http://localhost:5000/posts/{{posts.p_id}}/comments/{{comment.id}}" class="nav-link ">Edit</a>
+							<a href="http://localhost:5000/posts/{{posts.p_id}}/comments/{{comment.id}}/delete" class="nav-link">Delete</a>
+						</p>
+						{% endif %}
+						</li>
+					{% endfor %}
+								
+							
+					</ul>	
+				</div>
+				
+				<!--Show this if no comments available for this post-->
+				{% else %}
+				<h5 style="font-family:courier">Be the first person to comment on this post</h5>
+				{% endif %}
+			
+		{% endblock %}
+		<script>
+		function makeComment(){
+		xhttp = XHTTPRequest();
+		xhttp.onreadystatechange = function(){
+		if(this.readyState ==4 && this.status ==200){
+		document.getElementById('commnet-list').innerHTML = this.responseText;
+		}
+		};
+		xhttp.open('POST','/blog/id',true);
+		xhttp.send();
+		}
+		</script>

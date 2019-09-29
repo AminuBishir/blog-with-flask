@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Testing Ajax call</title>
+</head>
+<body>
+<button onclick="showResponse()">Click</button>
+<p id="text"></p>
+</body>
+<script>
+ function showResponse(){
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function(){
+	if(this.readyState ==4 && this.status==200){
+		document.getElementById("text").innerHTML = this.responseText;
+	}
+	};
+	xhttp.open("GET","https://restcountries.eu/rest/v2/region/africa",true);
+	xhttp.send();
+ }
+</script>
+</html>

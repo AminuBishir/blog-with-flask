@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+	{% block body %}
+		<div class="container-fluid">
+		
+		
+			<div class="row">
+				
+				<div class="col-4 offset-md-2 align-self-center">
+					
+					<form class="form" method="post">
+					<ul class="list-group">
+					{% for er in err %}
+						<li class="list-item">
+						{{err.get(er)}}
+						</li>
+						
+					{% endfor %}
+					</ul>
+					
+					{{form.firstname(class="form-control mt-5 mb-3", placeholder="Firstname")}}
+					{{form.surname(class="form-control mb-3", placeholder="Surname")}}
+					{{form.email(class="form-control mb-3", placeholder="Email")}}
+					{{form.password(class="form-control mb-3", placeholder="Password")}}
+					{{form.confirm(class="form-control mb-2", placeholder="Confirm Password")}}
+					<button class="btn btn-primary mx-auto" type="submit">Sign Up</button>
+					
+					</form>
+				</div>
+				
+			</div>
+		</div>
+	{% endblock %}

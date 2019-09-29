@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sadarwa</title>
+		<link type="text/css" rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+		
+		<script
+			  src="https://code.jquery.com/jquery-2.2.4.min.js"
+			  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			  crossorigin="anonymous"></script>
+			  <script src="/static/bootstrap/js/bootstrap.js"></script>
+		{% block style %}
+		{% endblock %}
+		
+		
+	</head>
+	<body>
+	<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+		
+		<a class="navbar-brand h1" href="http://localhost:5000/blog">Sadarwa</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navItems" aria-controls="navItems"	aria-expanded="false" aria-label="Nav Bar">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse flex-row-reverse"  id="navItems">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="#">Home</a>
+				<a class="nav-item nav-link" href="#">Create Post</a>
+				<a class="nav-item nav-link" href="#">Recent Posts</a>
+				<form class="form-inline">
+				<input class="form-control mr-sm-2" type="text" placeholder="Search">
+				<button class="form-control" type="submit">Search</button>
+				</form>
+			</div>
+		
+		</div>
+		
+		
+	</nav>
+	 {% block body %}
+	 
+	 {% endblock %}
+	 
+	 <div style=" margin-bottom:0px; margin-top:10rem">
+		<nav class="navbar navbar-expand navbar-dark bg-primary">
+		
+		
+		
+			<a class="nav-item nav-link" href="#" active><font color="#fff">Home</font></a>
+			<a class="nav-item nav-link" href="#" active><font color="#fff">Recent</font></a>
+			<a class="nav-item nav-link" href="#" active><font color="#fff">New</font></a>
+		
+		</nav>
+		<div class="d-block">
+			<center>
+				<font>Sadarwa &copy; 2019. All rights reserved.</font>
+			 </center>
+		</div>
+		 
+		 
+	 </div>
+	</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+	{% block body %}
+		<div class="container-fluid">
+		
+		
+			<div class="row">
+				
+				<div class="col-4 offset-md-2 align-self-center">
+					
+					<form class="form" method="post" action="/delete_post/{{p_id}}">
+					{{form.firstname(class="form-control mb-5, placeholder="Firstname",required}}
+					{{form.surname(class="form-control mb-5, placeholder="Surname",required}}
+					{{form.email(class="form-control mb-5, placeholder="Email",required}}
+					{{form.password(class="form-control mb-5, placeholder="Password",required}}
+					{{form.confirmpass(class="form-control mb-5, placeholder="Confirm Password",required}}
+					<button class="btn btn-primary" type="submit">Sign Up</button>
+					
+					</form>
+				</div>
+				
+			</div>
+		</div>
+	{% endblock %}

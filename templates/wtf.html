@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block body %}
+<form method="post" class="form-inline my-sm-5">
+{{form.fname(class="form-control", placeholder="Firtsname")}}
+{{form.sname(class="form-control mx-sm-2", placeholder="Surname")}}
+<button class="btn btn-primary" type="submit">Register</button>
+</form>
+
+
+{% endblock %}

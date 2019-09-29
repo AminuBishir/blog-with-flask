@@ -1,0 +1,32 @@
+{% if login %} 
+	<div class="form-group" style="width:30%">
+		<form method="post" class="form" action="/blog">
+		<input class="form-control" name="post_id" value="{{r_post.p_id}}" hidden>
+		<input type="text" class="form-control" placeholder="comment..." name="comment"><button type="submit" class="btn btn-primary">Comment</button>
+		
+		</form>
+	
+	</div>
+	{% endif %}<!--For comment form-->
+	
+	
+	{% if comments %}
+	<div style="width:50%; text-align:left;">
+		<ul class="list-group">
+		
+		{% for comment in comments %}
+		
+		<li class="list-group-item" style="margin-bottom:10px">
+		<h5 style="color:blue">{{comment.commentor.name}}</h5>
+		<font style="margin-left:5px">{{comment.comment}}</font>
+		</li>
+		{% endfor %}
+		
+	
+		</ul>	
+	</div>
+	
+	<!--Show this if no comments available for this post-->
+	{% else %}
+	<h5 style="font-family:courier">Be the first person to comment on this post</h5>
+{% endif %}
