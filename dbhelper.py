@@ -41,6 +41,7 @@ class Comment(Base):
 		}
 		
 		
+		
 class User(UserMixin,Base):
 	__tablename__ = 'users'
 	email=Column(String(100),nullable=False,primary_key=True)
