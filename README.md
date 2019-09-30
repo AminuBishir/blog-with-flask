@@ -8,7 +8,8 @@ To successfully run this web app, one needs to fulfill the following requirement
 4. SQLAlchemy (a python based Object Relational Model -ORM): ```$ pip install -U Flask-SQLAlchemy```
 5. flask-login (for handling login in and out): ```$ pip install Flask-Login```
 6. WTForm (for generating and validating forms): ```$ pip install wtform```
-7. Bootstrap 4: Download and put it in the /static folder, note that the name of the bootsrap folder should be ```bootstrap``` as specified in the <head> tag used (but you can still change it if you so wish)
+7. Jinja2 (in case in if it is not installed): ```$ pip install jinja2```
+8. Bootstrap 4: Download and put it in the /static folder, note that the name of the bootsrap folder should be ```bootstrap``` as specified in the <head> tag used (but you can still change it if you so wish)
 
 To run the web app, navigate the project folder in your shell and then run the web app by typing ```python main.py```
 
