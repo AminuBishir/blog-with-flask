@@ -1,6 +1,5 @@
 from flask import Flask,render_template, request, redirect, url_for,make_response,jsonify, session as login_session
 import requests
-import jinja2
 import hmac
 import hashlib
 import string
