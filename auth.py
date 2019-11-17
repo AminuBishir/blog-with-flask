@@ -2,7 +2,7 @@ import hmac
 import hashlib
 import string
 import random
-from views import get_response
+from views import *
 
 
 #secret key for creating values

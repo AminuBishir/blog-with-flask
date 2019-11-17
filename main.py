@@ -1,12 +1,12 @@
 from flask import Flask,render_template, request, redirect, url_for,make_response,jsonify, session as login_session
-import requests
-import re
+import string
 import os
+import random
 import psycopg2
 import bleach
 from dbhelper import *
 from werkzeug.utils import secure_filename
-from wtforms import Form,StringField,validators, TextAreaField,FileField,PasswordField
+from forms import *
 import flask_login
 from auth import *
 
@@ -379,58 +379,12 @@ def comments_api_json(user_id):
 	comments = get_user_comments_api(user_id)
 	return jsonify(Comment=[i.serialize for i in comments])
 
-class post_form(Form):
-	subject = StringField("Subject",[validators.Length(min=5, max=150),validators.required()])
-	content = TextAreaField("Content", [validators.required()])
-class UserForm(Form):
-	firstname = StringField("First Name",[validators.Length(min=3,max=50), validators.required()])
-	surname = StringField("Surname",[validators.Length(min=3,max=50),validators.required()])
-	email = StringField('Email',[validators.required(), validators.Email()])
-	password = PasswordField('Password',[validators.Length(min=3),validators.EqualTo('confirm', message="Passwords must match!")])
-	confirm = PasswordField('Confirm Password',[validators.required('Please confirm Password!')])
-class CommentForm(Form):
-	comment = StringField('Comment',[validators.required(),validators.Length(min=3, message="This comment is too short!")])
-'''
-class PostPage(BlogHandler):
-    def get(self, post_id):
-        key = db.Key.from_path('Blog', int(post_id), parent=blog_key())
-        post = db.get(key)
 
-        if not post:
-            self.error(404)
-            return
-
-        self.render("post.html", post = post)
-	
-'''
-def check_empty(input):
-	if not input:
-		return "This field cannot be empty!"
-	else:
-		return ""
-def confirmPass(pass1,pass2):
-	if(pass1 == pass2): #006b08a801d82d0c9824dcfdfdfa3b3c
-		return ""
-	else:
-		return "Passwords do not match!"
-def check_username(input):
-	if ((" " in input) or len(input)<3):
-		return "Invalid First and/or Last name!"
-	else:
-		return ""
-def validate_email(email):
-	if re.match("^.+@(/[?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) or not email:
-		return ""
-	else:
-		return "Invalid email address!"
 @loginManager.user_loader
 def load_user(user_id):
 	# since the user_id is just the primary key of our user table, use it in the query for the user
 	return get_user(user_id)
-'''app = webapp2.WSGIApplication([
-   ('/', MainHandler),('/blog',BlogHandler),('/new_post',NewPost),('/blog/([0-9]+)',BlogPage),('/login',LoginHandler),('/signup',Signup),('/logout',Logout)
-], debug=True)
-'''
+
 if __name__ == '__main__':
 	app.debug = True
 	app.secret_key = secret_key
