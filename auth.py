@@ -2,7 +2,7 @@ import hmac
 import hashlib
 import string
 import random
-from views import *
+#from views import *
 
 
 #secret key for creating values
@@ -12,7 +12,7 @@ letters = string.ascii_letters
 user_email =''
 #convenience function for setting and validating values
 def set_secure_val(val):
-	return '%s|%s' %(val,(hmac.new(str.encode(secret_key),str.encode(val)).hexdigest()))
+	return '%s|%s' %(val,(hmac.new(str.encode(secret_key),str.encode(val),hashlib.sha256).hexdigest()))
 
 def check_secure_val(secure_val):
 	val = secure_val.split('|')[0]
