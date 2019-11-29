@@ -1,5 +1,6 @@
 from auth import *
 import pytest
+import hashlib
 
 #set user_id fixture
 @pytest.fixture(scope='module')
@@ -36,10 +37,16 @@ def test_custom_salt():
 	assert len(salt)==20
 	
 '''
-GIVEN: a salt for password encryption
+GIVEN: make_salt function
 WHEN: no salt length is given
 THEN: check that salt is created with default length 5'''
 def test_default_salt():
 	salt = make_salt()
 	assert len(salt) == 5
 	
+'''GIVEN: make_pw_hash funcition
+	WHEN: password is created by user_id
+	THEN: check that the password is hashed'''
+def test_pw_hash(user_name,password):
+	hash = make_pw_hash(user_name,password)
+	assert hash.split(',')[1] == hashlib.sha256((user_name+password+hash.split(',')[0]).encode('utf-8')).hexdigest()

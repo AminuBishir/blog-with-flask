@@ -52,8 +52,11 @@ class User(UserMixin,Base):
 	password = Column(String(100),nullable=False)
 	role = Column(String(50),nullable=True)
 	
+	@property
 	def get_id(self):
 		return self.email
+	
+	@property
 	def get_role(self):
 		return self.role
 	
