@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 	{% block body %}
 	<center style="margin-top:15%">
-		<p>Generated Token:<font color="green">{{token}}</font></p>
+		<!--<p>Generated Token:<font color="green">{{token}}</font></p>-->
 		<form method="post" action='/login'>
 			<h4 style="font-family:courier; color:red">{{error}}</h4>
 			<label>Email:
@@ -11,7 +11,7 @@
 				<div><input type="password" name = "password"></div>
 			</label> 
 			
-			<font style="font-family:Sans-serif; font-size:12px;">Don't have an account? <a href="http://localhost:8000/signup">Click here</a> to Signup</font><br>
+			<font style="font-family:Sans-serif; font-size:12px;">Don't have an account? <a href="http://localhost:5000/signup">Click here</a> to Signup</font><br>
 			<button type="submit" class="btn btn-default">Login</button>
 		</form>
 	</center>
