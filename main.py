@@ -14,7 +14,7 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),auto
 '''
 
 
-UPLOAD_FOLDER = 'D:/AMINU BISHIR/AMINU BISHIR/PROGRAMMING/Full Stack Web/fullstack-nanodegree-vm/vagrant/sadarwa-blog/image'
+
 
 #import blueprints
 from views import bp as views_bp
@@ -32,12 +32,11 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(forms_bp)
 app.register_blueprint(db_bp)
 
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+#app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 loginManager = flask_login.LoginManager()
 loginManager.init_app(app)
 
-#secret key for creating values
-secret_key = '0!`~|+=_(*%:?>,$@-19'
+
 
 
 
@@ -94,7 +93,11 @@ class Like(db.Model):
 
 
 if __name__ == '__main__':
-	app.debug = True
-	app.secret_key = secret_key
+	#app.debug = True
+	#app.secret_key = secret_key
+	if app.config["ENV"] == 'production':
+		app.config.from_object("config.ProductionConfig")
+	else:
+		app.config.from_object("config.DevelopmentConfig")
 	app.run(host='0.0.0.0',port=5000)
 	
