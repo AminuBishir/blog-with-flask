@@ -1,8 +1,9 @@
+import os
 class Config(object):
 	DEBUG = False
 	TESTING = False
 	
-	SECRET_KEY = '0!`~|+=_(*%:?>,$@-19'
+	SECRET_KEY = os.environ.get("SECRET_KEY","")
 	UPLOAD_FOLDER = 'D:/AMINU BISHIR/AMINU BISHIR/PROGRAMMING/Full Stack Web/fullstack-nanodegree-vm/vagrant/sadarwa-blog/image'
 	
 	SESSION_COOKIE_SECURE = True
