@@ -23,8 +23,8 @@
 	</nav>
 		<center>
 			{% if login %} 
-			<a href="http://localhost:5000/new_post">Add new Post</a>
-			<div align="left"><h4>Welcome {{user}}</h4><a href="http://localhost:5000/logout">Logout</a></div>
+			
+			<div align="left"><h4>Welcome {{user.f_name}}</h4><a href="http://localhost:5000/logout">Logout</a></div>
 			
 			{% else %}
 			 <div><a href="http://localhost:5000/login">Login</a></div>
@@ -46,8 +46,14 @@
 							<div><img src="{{r_post.img_src}}" class="img-fluid" style="padding-left:4rem; padding-right:4rem;" alt="Img here"/></div>
 							<p style="text-align:left; text-decoration:bold; margin-left:5%"></p>
 							<p style="font-weight:bold; padding-left:3rem; padding-top:20px; font-size:12px; font-family:courier;" class="text-left rounded">Published on {{r_post.created.date()}} by {{r_post.author}} </p>
-							<div style="margin: 3% 20% 10% 5%; text-align:justify"> <br>{{r_post.content |safe}} </div>
+							
+								
+								
+							<div style="margin: 3% 20% 10% 5%; text-align:justify"> <br>{{r_post.content |safe}} 
+							
+							</div>
 							{% if login %} 
+								
 							<div class="form-group mx-sm-3" >
 								<form method="post" class="form-inline" action="/blog">
 								<input class="form-control " name="post_id" value="{{r_post.p_id}}" hidden>

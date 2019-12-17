@@ -17,6 +17,7 @@ class Blog(Base):
 	content = Column(String(),nullable=False)
 	author = Column(String(100),nullable=False)
 	created = Column(DateTime(),default=datetime.datetime.utcnow)
+	last_modified = Column(DateTime(),default=datetime.datetime.utcnow)
 	img_src = Column(String(100),nullable=True)
 	p_id = Column(Integer,nullable=False, primary_key=True)
 	
@@ -27,6 +28,7 @@ class Comment(Base):
 	p_id = Column(Integer,ForeignKey('blog.p_id'))
 	commentor = Column(String(100),nullable=False)
 	comment = Column(String(),nullable=False)
+	created = Column(DateTime(),default=datetime.datetime.utcnow)
 	
 	#create relationship between this table and blogs table
 	blog = relationship(Blog)
@@ -39,7 +41,8 @@ class Comment(Base):
 		'id':self.id,
 		'p_id':self.p_id,
 		'commentor':self.commentor,
-		'comment':self.comment
+		'comment':self.comment,
+		'Created':self.created
 		}
 		
 		
@@ -52,9 +55,10 @@ class User(UserMixin,Base):
 	password = Column(String(100),nullable=False)
 	role = Column(String(50),nullable=True)
 	
-	@property
+	
 	def get_id(self):
-		return self.email
+		print('From User: '+str(self.is_authenticated))
+		return str(self.email)
 	
 	@property
 	def get_role(self):
@@ -87,7 +91,29 @@ def get_user(user_email):
 	
 	session = create_session()
 	user = session.query(User).filter_by(email=bleach.clean(user_email)).first()
-	return user
+	if user:
+		return user
+	else:
+		return None
+#return all the registered users
+def get_users():
+	
+	session = create_session()
+	users = session.query(User).all()
+	if users:
+		return users
+	else:
+		return None
+#the id is the user email before the edit (so that even if teh user changed his current email we can still find him before the new change is committed)
+def edit_user(id,email, f_name,s_name,role):
+	
+	session = create_session()
+	user = get_user(id)
+	if user:
+		user.email = email
+		user.f_name = f_name
+		user.role = role
+		session.commit()
 	
 def add_post(subject,content,author,img_path):
 	session = create_session()
@@ -135,7 +161,7 @@ def get_recent_post():
 def get_posts():
 	
 	session = create_session()
-	all_posts = session.query(Blog).all()
+	all_posts = session.query(Blog).order_by(desc(Blog.last_modified)).all()
 	return all_posts
 
 def add_comment(p_id,commentor,comment):

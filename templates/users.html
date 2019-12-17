@@ -1,0 +1,24 @@
+{% extends 'admin_base.html' %}
+{% block body %}
+	<table class="table">
+	<tr>
+		<th scope="row">Firstname</th>
+		<th scope="row">Lastname</th>
+		<th scope="row">Username</th>
+		<th scope="row">Role</th>
+		<th scope="row">Actions</th>
+	</tr>
+	{% if users %}
+	{% for user in users %}
+	<tr><td>{{user.f_name}}</td>
+	<td>{{user.s_name}}</td>
+	<td>{{user.email}}</td>
+	<td>{{user.role}}</td>
+	<td><a href="/edit_user/{{user.email}}">Edit</a>&nbsp;&nbsp;<a href="/delete_user/{{user.email}}">Delete</a></td>
+	</tr>
+	
+	{% endfor %}
+	{% endif %}
+	</table>
+
+{% endblock %}

@@ -1,5 +1,4 @@
 from flask import Flask,render_template, request, redirect, url_for,make_response,jsonify, session as login_session
-from flask import Flask,render_template, request, redirect, url_for,make_response,jsonify, session as login_session
 import string
 import os
 import random
@@ -11,13 +10,17 @@ from views import bp
 from models.dbhelper import *
 from validation.validators import *
 from auth.auth import *
+from forms.forms import *
+from main import create_app
 
-
+app = create_app()
 loginManager = flask_login.LoginManager()
-
+loginManager.login_view = 'views.login'
+loginManager.init_app(app)
+	
 @bp.route('/')	
 def main_get():
-	return redirect(url_for('blog'))
+	return redirect(url_for('views.blog'))
 
 def show_posts(comments=None):
 	#query the available blogs
@@ -30,7 +33,7 @@ def show_posts(comments=None):
 		if cookie:
 			uid = cookie.split('|')[0]
 			user = get_user(uid)
-			return render_template('blog.html',r_post=recent_post,blog_posts=blogs, user=user.f_name, login=True,comments = comments)
+			return render_template('blog.html',r_post=recent_post,blog_posts=blogs, user=user, login=True,comments = comments)
 		else:
 			return render_template('blog.html',r_post=recent_post, blog_posts=blogs,comments = comments)
 	else:
@@ -182,6 +185,7 @@ def user_signup():
 def login():
 	if request.method == 'GET':
 		login_session['token'] = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(20))
+		print(flask_login.current_user)
 		return render_template('login.html',error='', token=login_session['token'])
 	else:
 	
@@ -193,10 +197,18 @@ def login():
 			if (valid_pw(email,password,user.password)):
 				cookie = make_secure_cookie('user_id',user.email)
 				recent_post = get_recent_post()
-				res = make_response(render_template('blog.html',r_post=recent_post, blog_posts = get_posts(),user=user.f_name, login=True))
+				#res = make_response(render_template('blog.html',r_post=recent_post, blog_posts = get_posts(),user=user, login=True))
+				res = make_response(redirect('/comments/aminubishir@gmail.com'))
 				res.set_cookie('user_id',set_secure_val(user.email),httponly=True)
 				
-				#logged = flask_login.login_user(user)
+				logged = flask_login.login_user(user)
+				if(flask_login.current_user.is_authenticated):
+				
+					print(flask_login.current_user.email)
+					print(flask_login.current_user.is_authenticated)
+					print(request.args.get('next'))
+				else:
+					print("Not authenticated!")
 				
 				return res
 			else:
@@ -209,11 +221,12 @@ def login():
 def logout():
 	#self.response.headers.add_header('Set-Cookie','user_id =; path=/')
 	res = make_response(redirect(url_for('views.blog')))
+	
 	flask_login.logout_user()
 	res.set_cookie('user_id','')
 	return res
 
-	
+
 def new_post(subject="",content="",error=""):
 	if check_secure_cookie('user_id'):
 		return render_template("new_post.html",subject=subject,content=content,error=error)
@@ -232,6 +245,7 @@ def new_post_get():
 		global user_email
 		user_email=''
 		return render_template('login.html',error='Please login to continue')
+		
 
 @bp.route('/new_post', methods=['POST'])	
 def new_post_post():
@@ -249,7 +263,7 @@ def new_post_post():
 			 print(path)
 			 add_post(subject,content,cookie.split('|')[0],path)
 			 blog = get_recent_post()
-			 return redirect(url_for('views.blog'))
+			 return redirect(url_for('views.dash_posts'))
 		else:
 			error = "Sorry, no field can be left empty!"
 			new_post(subject,content,error)
@@ -283,28 +297,30 @@ def gen_form():
 	if request.method == 'POST' and form.validate():
 		return 'Success!'
 	return render_template('wtf.html',form=form)
-	
+
 @bp.route('/edit_post/<int:id>',methods=['GET','POST'])
-@flask_login.login_required
+#@flask_login.login_required
 def edit_post(id):
 	form = post_form(request.form)
 	if request.method == 'GET':
 		post = get_post(id)
 		form.subject.data = post.subject
 		form.content.data = post.content
+		
 		return render_template('edit_post.html',form=form)
 	elif request.method =='POST' and form.validate():
 		subject = form.subject.data
 		content = form.content.data
 		update_post(id,subject,content)
-		return redirect(url_for('get_blog',post_id=id))
-
+		return redirect(url_for('views.dash_posts'))
+#import pdb; pdb.set_trace()	
+		
 @bp.route('/delete_post/<int:id>', methods=['GET','POST'])
-@flask_login.login_required
+#@flask_login.login_required
 def delete_blog_post(id):
 	if request.method =='POST':
 		delete_post(id)
-		return redirect(url_for('blog'))
+		return redirect(url_for('views.dash_posts'))
 	else:
 		post = get_post(id)
 		return render_template('confirm_delete.html',p_id=id,type='Blog Post',content=post.subject)
@@ -312,12 +328,31 @@ def delete_blog_post(id):
 
 #returns the json format of the user commetns		
 @bp.route('/comments/<string:user_id>',methods=['GET','POST'])
-@flask_login.login_required
+#@flask_login.login_required
 def comments_api_json(user_id):
 	comments = get_user_comments_api(user_id)
 	return jsonify(Comment=[i.serialize for i in comments])
 
 
+#admin dashboard
+@bp.route('/admin',methods=['GET'])
+#@flask_login.login_required
+def dashboard():
+	return render_template('admin_dashboard.html')
+
+@bp.route('/dashboard_posts',methods=['GET'])
+def dash_posts():
+	posts =  get_posts()
+	return render_template('dashboard_post.html',posts=posts)
+	
+@bp.route('/reg_users')
+def reg_users():
+	users = get_users()
+	return render_template('users.html',users=users)
+	
+@bp.route('/dash_overview')
+def dash_overview():
+	return render_template('dashboard.html')
 @loginManager.user_loader
 def load_user(user_id):
 	# since the user_id is just the primary key of our user table, use it in the query for the user

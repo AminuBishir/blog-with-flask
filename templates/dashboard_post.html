@@ -1,0 +1,21 @@
+{% extends 'admin_base.html' %}
+{% block body %}
+	<a href="/new_post" target="view_panel"><button class="button primary">New Post</button></a><br><br>
+	{% if posts %}
+	
+		
+		<ul class="list-group pagination">
+			{% for post in posts %}
+						
+			<li class="list-group-item page-item">
+						
+				<h4><a href="/blog/{{post.p_id}}" target="next">{{post.subject}}</a></h4>
+				<left><a href="/edit_post/{{post.p_id}}">Edit</a>&nbsp;&nbsp; <a href="/delete_post/{{post.p_id}}">Delete</a></left>
+			</li>
+						
+			{% endfor %}
+		</ul>
+	
+	{% endif %}
+
+{% endblock %}
