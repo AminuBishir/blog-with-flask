@@ -11,12 +11,9 @@ from models.dbhelper import *
 from validation.validators import *
 from auth.auth import *
 from forms.forms import *
-from main import create_app
+from main import *
 
-app = create_app()
-loginManager = flask_login.LoginManager()
-loginManager.login_view = 'views.login'
-loginManager.init_app(app)
+
 	
 @bp.route('/')	
 def main_get():
@@ -60,12 +57,16 @@ def make_comment(comment,id_post):
 	if id_post:
 		print("Post_id isn't empty")
 		if not(add_comment(id_post,uid,comment)):
-			print("Commed NOT Added!")
+			print("Comment NOT Added!")
 		load_comments = get_comments(id_post)
-		return show_posts(load_comments)
+		post = get_post(id_post)
+		return render_template('post.html',user_id=user_email,posts=post,comments=load_comments,login=True)
 	else:
 		print("Post_id is empty")
 		return show_posts()
+@bp.route('/comments/<int:p_id>')
+def reload_comments(p_id):
+	return get_comments(p_id)
 #for editing user comment
 @bp.route('/posts/<int:p_id>/comments/<int:id>',methods=['GET','POST'])
 @flask_login.login_required
@@ -185,7 +186,7 @@ def user_signup():
 def login():
 	if request.method == 'GET':
 		login_session['token'] = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(20))
-		print(flask_login.current_user)
+		#print(flask_login.current_user)
 		return render_template('login.html',error='', token=login_session['token'])
 	else:
 	
@@ -204,8 +205,8 @@ def login():
 				logged = flask_login.login_user(user)
 				if(flask_login.current_user.is_authenticated):
 				
-					print(flask_login.current_user.email)
-					print(flask_login.current_user.is_authenticated)
+					#print(flask_login.current_user.email)
+					#print(flask_login.current_user.is_authenticated)
 					print(request.args.get('next'))
 				else:
 					print("Not authenticated!")

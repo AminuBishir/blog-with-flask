@@ -14,28 +14,31 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),auto
 '''
 
 
-def create_app():
 #create app and register blueprints
-	app = Flask("__main__")
+app = Flask("__main__")
+
+loginManager = flask_login.LoginManager()
+loginManager.login_view = 'views.login'
+loginManager.init_app(app)
+@loginManager.user_loader
+def load_user(user_id):
+    return None
 	
-	loginManager = flask_login.LoginManager()
-	loginManager.login_view = 'views.login'
-	loginManager.init_app(app)
-	#import blueprints
-	from views import bp as views_bp
-	from validation import bp as validators_bp
-	from auth import bp as auth_bp
-	from forms import bp as forms_bp
-	from models import bp as db_bp
+#import blueprints
+from views import bp as views_bp
+from validation import bp as validators_bp
+from auth import bp as auth_bp
+from forms import bp as forms_bp
+from models import bp as db_bp
 
 
 
-	app.register_blueprint(views_bp)
-	app.register_blueprint(validators_bp)
-	app.register_blueprint(auth_bp)
-	app.register_blueprint(forms_bp)
-	app.register_blueprint(db_bp)
-	return app
+app.register_blueprint(views_bp)
+app.register_blueprint(validators_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(forms_bp)
+app.register_blueprint(db_bp)
+
 
 
 
@@ -96,8 +99,8 @@ class Like(db.Model):
 
 
 if __name__ == '__main__':
-	app = create_app()
-	if app.config["ENV"] == 'production':
+	
+	if app.config["ENV"] != 'production':
 		app.config.from_object("config.ProductionConfig")
 	else:
 		app.config.from_object("config.DevelopmentConfig")
